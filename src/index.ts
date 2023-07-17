@@ -11,8 +11,8 @@ export class Elevator {
     this.onFloor = 0;
   }
 
-  travelCost(from: number, to: number): number {
-    return Math.abs(from - this.onFloor) + Math.abs(to - from);
+  pickupTime(from: number, to: number): number {
+    return Math.abs(from - this.onFloor);
   }
 }
 
