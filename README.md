@@ -22,6 +22,3 @@ Which elevator can serve the request:
 - Check elevators that are already moving, sort by service time (closest to F)
 - If no such elevator, check idle elevators, get the closest to F
 - If no such elevator, reject the request
-
-
-
