@@ -1,4 +1,4 @@
-import { Elevator, DONE } from "../src/elevator";
+import { Elevator } from "../src/elevator";
 
 let elevator: Elevator;
 
@@ -31,7 +31,7 @@ describe('Calculate the pickup time if the elevator is moving up with multiple s
       next: {
         floor: 4,
         deltaCapacity: 1,
-        next: DONE
+        next: null
       },
     };
   });
@@ -65,7 +65,7 @@ describe('Calculate pickup time if the elevator is still returning before starti
       next: {
         floor: 2,
         deltaCapacity: 1,
-        next: DONE
+        next: null
       }
     };
   });
@@ -86,7 +86,7 @@ describe('Calculate pickup time if the elevator is moving down', () => {
       next: {
         floor: 5,
         deltaCapacity: 1,
-        next: DONE
+        next: null
       }
     };
   });
@@ -106,5 +106,121 @@ describe('Calculate pickup time if the elevator is moving down', () => {
 
   test('has capacity at source, but not for the entire trip', () => {
     expect(elevator.calculatePickupTime(9, 7)).toBe(-1);
+  });
+});
+
+
+describe('Insert a new stop into the program - idle elevator', () => {
+  beforeEach(() => {
+    elevator = new Elevator(10);
+  });
+
+  test('idle elevator', () => {
+    elevator.insertStop(1, -1);
+    expect(elevator.program).toEqual({
+      floor: 1,
+      deltaCapacity: -1,
+      next: null
+    });
+  });
+});
+
+describe('Insert a new stop into the program - elevator moving up', () => {
+  beforeEach(() => {
+    elevator = new Elevator(10);
+    elevator.program = {
+      floor: 3,
+      deltaCapacity: -1,
+      next: {
+        floor: 5,
+        deltaCapacity: 1,
+        next: null
+      }
+    };
+  });
+
+  test('elevator already stops on requested floor - capacity number adjusted', () => {
+    elevator.insertStop(3, -1);
+    expect(elevator.program).toEqual({
+      floor: 3,
+      deltaCapacity: -2,
+      next: {
+        floor: 5,
+        deltaCapacity: 1,
+        next: null
+      }
+    });
+  });
+
+  test('insert before first stop', () => {
+    elevator.insertStop(2, 5);
+    expect(elevator.program).toEqual({
+      floor: 2,
+      deltaCapacity: 5,
+      next: {
+        floor: 3,
+        deltaCapacity: -1,
+        next: {
+          floor: 5,
+          deltaCapacity: 1,
+          next: null
+        }
+      }
+    });
+  });
+
+  test('insert between two stops', () => {
+    elevator.insertStop(4, 12);
+    expect(elevator.program).toEqual({
+      floor: 3,
+      deltaCapacity: -1,
+      next: {
+        floor: 4,
+        deltaCapacity: 12,
+        next: {
+          floor: 5,
+          deltaCapacity: 1,
+          next: null
+        }
+      }
+    });
+  });
+
+  test('insert after last stop', () => {
+    elevator.insertStop(8, 4);
+    expect(elevator.program).toEqual({
+      floor: 3,
+      deltaCapacity: -1,
+      next: {
+        floor: 5,
+        deltaCapacity: 1,
+        next: {
+          floor: 8,
+          deltaCapacity: 4,
+          next: null
+        }
+      }
+    });
+  });
+
+  test('insert an entire job', () => {
+    elevator.insertJob(4, 6);
+    expect(elevator.program).toEqual({
+      floor: 3,
+      deltaCapacity: -1,
+      next: {
+        floor: 4,
+        deltaCapacity: -1,
+        next: {
+          floor: 5,
+          deltaCapacity: 1,
+          next: {
+            floor: 6,
+            deltaCapacity: 1,
+            next: null
+          }
+        }
+      }
+    });
   });
 });

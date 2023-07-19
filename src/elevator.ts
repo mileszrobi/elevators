@@ -1,5 +1,5 @@
 export class Elevator {
-  program: Stop | Done;
+  program: Stop | null;
   floor: number;
   totalCapacity: number;
   capacity: number;
@@ -10,7 +10,7 @@ export class Elevator {
     this.floor = 0;
     this.capacity = totalCapacity;
     this.serviceDirection = 0;
-    this.program = DONE;
+    this.program = null;
   }
 
   hasCapacityForTrip(from: number, to: number): boolean {
@@ -18,11 +18,15 @@ export class Elevator {
     let capacity = this.capacity;
     const s = this.serviceDirection; // Changes the sign of the operations if the direction is -1
 
+    if (curr === null) {
+      return true;
+    }
+
     if (s * from < s * curr.floor && capacity === 0) {
       return false;
     }
 
-    while(curr !== DONE) {
+    while(curr !== null && curr.next !== null) {
       capacity += curr.deltaCapacity;
       if (s * curr.floor <= s * from && s * from < s * curr.next.floor && capacity === 0) {
         return false;
@@ -46,7 +50,7 @@ export class Elevator {
       return -1;
     }
 
-    if (this.program === DONE) {
+    if (this.program === null) {
       return Math.abs(from - this.floor);
     }
 
@@ -56,23 +60,48 @@ export class Elevator {
       return -1;
     }
   }
+
+  insertStop(floor: number, deltaCapacity: number): void {
+    if (this.program === null || floor < this.program.floor) {
+      this.program = {
+        floor: floor,
+        deltaCapacity: deltaCapacity,
+        next: this.program,
+      }
+    } else {
+      let curr: Stop | null = this.program;
+      while (curr !== null) {
+        const next: Stop | null = curr.next;
+        if (curr.floor === floor) {
+          curr.deltaCapacity += deltaCapacity;
+          return;
+        } else if (curr.floor < floor && (next == null || floor < next.floor)) {
+          curr.next = {
+            floor: floor,
+            deltaCapacity: deltaCapacity,
+            next: next
+          }
+          return;
+        }
+        curr = next;
+      }
+    }
+  }
+
+  insertJob(from: number, to: number): void {
+    this.insertStop(from, -1);
+    this.insertStop(to, 1);
+  }
 }
 
 export class Stop {
   floor: number;
   deltaCapacity: number;
-  next: Stop | Done;
+  next: Stop | null;
 
   constructor(floor: number, deltaCapacity: number) {
     this.floor = floor;
     this.deltaCapacity = deltaCapacity;
-    this.next = DONE;
+    this.next = null;
   }
 }
-
-class Done {
-  floor = -1;
-  deltaCapacity = -1;
-  next = this;
-}
-export const DONE = new Done();
