@@ -1,13 +1,11 @@
 export class Elevator {
   program: Stop | null;
   floor: number;
-  totalCapacity: number;
   capacity: number;
 
-  constructor(totalCapacity: number) {
-    this.totalCapacity = totalCapacity;
+  constructor(capacity: number) {
     this.floor = 0;
-    this.capacity = totalCapacity;
+    this.capacity = capacity;
     this.program = null;
   }
 
