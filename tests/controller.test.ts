@@ -30,4 +30,11 @@ describe('Determining which elevator will service a request', () => {
     controller.elevators[2].serviceDirection = 1;
     expect(controller.request(3, 4)).toBe(2);
   });
+
+  test('the request is rejected if no elevators can take it', () => {
+    controller.elevators[0].serviceDirection = -1;
+    controller.elevators[1].serviceDirection = -1;
+    controller.elevators[2].serviceDirection = -1;
+    expect(controller.request(3, 4)).toBe(-1);
+  });
 });
