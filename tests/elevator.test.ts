@@ -24,7 +24,6 @@ describe('The pickup time for an elevator equals to steps necessary to get to th
 describe('Calculate the pickup time if the elevator is moving up with multiple stops', () => {
   beforeEach(() => {
     elevator = new Elevator(1);
-    elevator.serviceDirection = 1;
     elevator.program = {
       floor: 2,
       deltaCapacity: -1,
@@ -58,7 +57,6 @@ describe('Calculate pickup time if the elevator is still returning before starti
   beforeEach(() => {
     elevator = new Elevator(10);
     elevator.floor = 5;
-    elevator.serviceDirection = 1;
     elevator.program = {
       floor: 1,
       deltaCapacity: -1,
@@ -79,7 +77,6 @@ describe('Calculate pickup time if the elevator is moving down', () => {
   beforeEach(() => {
     elevator = new Elevator(1);
     elevator.floor = 10;
-    elevator.serviceDirection = -1;
     elevator.program = {
       floor: 8,
       deltaCapacity: -1,

@@ -1,7 +1,17 @@
 import { ElevatorController } from "../src/controller";
-import { Elevator } from "../src/elevator";
+import { Elevator, Stop } from "../src/elevator";
 
 let controller: ElevatorController;
+
+const oppositeDirectionProgram: Stop = {
+  floor: 10,
+  deltaCapacity: -1,
+  next: {
+    floor: 8,
+    deltaCapacity: 1,
+    next: null
+  }
+};
 
 describe('Determining which elevator will service a request', () => {
   beforeEach(() => {
@@ -24,17 +34,16 @@ describe('Determining which elevator will service a request', () => {
     expect(controller.request(3, 4)).toBe(1);
   });
 
-  test('elevators negative pickup time are ignored', () => {
-    controller.elevators[0].serviceDirection = -1;
-    controller.elevators[1].serviceDirection = -1;
-    controller.elevators[2].serviceDirection = 1;
+  test('elevators with negative pickup time are ignored', () => {
+    controller.elevators[0].program = oppositeDirectionProgram;
+    controller.elevators[1].program = oppositeDirectionProgram;
     expect(controller.request(3, 4)).toBe(2);
   });
 
   test('the request is rejected if no elevators can take it', () => {
-    controller.elevators[0].serviceDirection = -1;
-    controller.elevators[1].serviceDirection = -1;
-    controller.elevators[2].serviceDirection = -1;
+    controller.elevators[0].program = oppositeDirectionProgram;
+    controller.elevators[1].program = oppositeDirectionProgram;
+    controller.elevators[2].program = oppositeDirectionProgram;
     expect(controller.request(3, 4)).toBe(-1);
   });
 });

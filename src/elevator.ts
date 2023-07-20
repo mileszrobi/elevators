@@ -3,20 +3,33 @@ export class Elevator {
   floor: number;
   totalCapacity: number;
   capacity: number;
-  serviceDirection: number;
 
   constructor(totalCapacity: number) {
     this.totalCapacity = totalCapacity;
     this.floor = 0;
     this.capacity = totalCapacity;
-    this.serviceDirection = 0;
     this.program = null;
+  }
+
+  getDirection(): number {
+    if (this.program === null) {
+      return 0;
+    }
+
+    let a = this.floor;
+    let b = this.program.floor
+    if (this.program.next !== null) {
+      a = this.program.floor;
+      b = this.program.next.floor;
+    }
+
+    return b > a ? 1 : -1;
   }
 
   hasCapacityForTrip(from: number, to: number): boolean {
     let curr = this.program;
     let capacity = this.capacity;
-    const s = this.serviceDirection; // Changes the sign of the operations if the direction is -1
+    const s = this.getDirection(); // Changes the sign of the operations if the direction is -1
 
     if (curr === null) {
       return true;
@@ -43,7 +56,7 @@ export class Elevator {
 
   isInOppositeDirection(from: number, to: number): boolean {
     const requestDirection = to - from;
-    return (requestDirection * this.serviceDirection < 0);
+    return (requestDirection * this.getDirection() < 0);
   }
 
   calculatePickupTime(from: number, to: number): number {
