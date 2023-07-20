@@ -19,9 +19,9 @@ function replay(elevatorConfigPath: string, requestLogPath: string): void {
   for (const r of requests) {
     const selectedElevator = controller.request(r.from, r.to);
     if (selectedElevator === -1) {
-      console.log(`Request ${JSON.stringify(r)} cannot be fulfilled at the time`);
+      console.log(`Request ${JSON.stringify(r)} cannot be fulfilled`);
     } else {
-      console.log(`Request ${JSON.stringify(r)} is serviced by elevator number ${selectedElevator + 1}`);
+      console.log(`Request ${JSON.stringify(r)} is fulfilled by elevator number ${selectedElevator + 1}`);
     }
   }
   
@@ -51,7 +51,6 @@ const argv = yargs(process.argv.slice(2))
       return yargs;
     },
     argv => {
-      console.log(argv)
       replay(argv.elevatorConfig as string, argv.requestLog as string);
     }
   )

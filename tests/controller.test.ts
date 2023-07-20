@@ -3,16 +3,6 @@ import { Elevator, Stop } from "../src/elevator";
 
 let controller: ElevatorController;
 
-const oppositeDirectionProgram: Stop = {
-  floor: 10,
-  deltaCapacity: -1,
-  next: {
-    floor: 8,
-    deltaCapacity: 1,
-    next: null
-  }
-};
-
 describe('Determining which elevator will service a request', () => {
   beforeEach(() => {
     const elevators = [

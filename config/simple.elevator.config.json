@@ -1,17 +1,14 @@
 [
   {
     "floor": 0,
-    "capacity": 10,
-    "program": null
+    "capacity": 10
   },
   {
     "floor": 5,
-    "capacity": 10,
-    "program": null
+    "capacity": 10
   },
   {
     "floor": 8,
-    "capacity": 10,
-    "program": null
+    "capacity": 10
   }
 ]
