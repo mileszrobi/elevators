@@ -1,0 +1,17 @@
+[
+  {
+    "floor": 0,
+    "capacity": 10,
+    "program": null
+  },
+  {
+    "floor": 5,
+    "capacity": 10,
+    "program": null
+  },
+  {
+    "floor": 8,
+    "capacity": 10,
+    "program": null
+  }
+]
