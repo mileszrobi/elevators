@@ -28,13 +28,14 @@ export class Elevator {
 
     while(curr !== null && curr.next !== null) {
       capacity += curr.deltaCapacity;
-      if (s * curr.floor <= s * from && s * from < s * curr.next.floor && capacity === 0) {
+      const next: Stop | null = curr.next;
+      if (s * curr.floor <= s * from && s * from < s * next.floor && capacity === 0) {
         return false;
       }
       if (s * from < s * curr.floor && s * curr.floor < s * to && capacity === 0) {
         return false;
       }
-      curr = curr.next;
+      curr = next;
     }
 
     return true;
