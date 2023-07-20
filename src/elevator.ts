@@ -1,14 +1,21 @@
 export class Elevator {
-  program: Stop | null;
   floor: number;
   capacity: number;
+  program: Stop | null;
+  direction: number;
 
-  constructor(capacity: number) {
+  constructor(capacity = 10) {
     this.floor = 0;
     this.capacity = capacity;
     this.program = null;
+    this.direction = 0;
   }
 
+  static fromJSON(json: Object) {
+    return Object.assign(new Elevator(), json);
+  }
+
+  /*
   getDirection(): number {
     if (this.program === null) {
       return 0;
@@ -22,12 +29,12 @@ export class Elevator {
     }
 
     return b > a ? 1 : -1;
-  }
+  }*/
 
   hasCapacityForTrip(from: number, to: number): boolean {
     let curr = this.program;
     let capacity = this.capacity;
-    const s = this.getDirection(); // Changes the sign of the operations if the direction is -1
+    const s = this.direction; // Changes the sign of the operations if the direction is -1
 
     if (curr === null) {
       return true;
@@ -54,7 +61,7 @@ export class Elevator {
 
   isInOppositeDirection(from: number, to: number): boolean {
     const requestDirection = to - from;
-    return (requestDirection * this.getDirection() < 0);
+    return (requestDirection * this.direction < 0);
   }
 
   calculatePickupTime(from: number, to: number): number {
@@ -74,7 +81,8 @@ export class Elevator {
   }
 
   insertStop(floor: number, deltaCapacity: number): void {
-    if (this.program === null || floor < this.program.floor) {
+    const s = this.direction; // Changes the sign of the operations if the direction is -1
+    if (this.program === null || s * floor < s * this.program.floor) {
       this.program = {
         floor: floor,
         deltaCapacity: deltaCapacity,
@@ -87,7 +95,7 @@ export class Elevator {
         if (curr.floor === floor) {
           curr.deltaCapacity += deltaCapacity;
           return;
-        } else if (curr.floor < floor && (next == null || floor < next.floor)) {
+        } else if (s * curr.floor < s * floor && (next == null || s * floor < s * next.floor)) {
           curr.next = {
             floor: floor,
             deltaCapacity: deltaCapacity,
@@ -101,6 +109,9 @@ export class Elevator {
   }
 
   insertJob(from: number, to: number): void {
+    if (this.direction === 0) {
+      this.direction = to > from ? 1 : -1;
+    }
     this.insertStop(from, -1);
     this.insertStop(to, 1);
   }

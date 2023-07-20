@@ -35,15 +35,15 @@ describe('Determining which elevator will service a request', () => {
   });
 
   test('elevators with negative pickup time are ignored', () => {
-    controller.elevators[0].program = oppositeDirectionProgram;
-    controller.elevators[1].program = oppositeDirectionProgram;
+    controller.elevators[0].direction = -1;
+    controller.elevators[1].direction = -1;
     expect(controller.request(3, 4)).toBe(2);
   });
 
   test('the request is rejected if no elevators can take it', () => {
-    controller.elevators[0].program = oppositeDirectionProgram;
-    controller.elevators[1].program = oppositeDirectionProgram;
-    controller.elevators[2].program = oppositeDirectionProgram;
+    controller.elevators[0].direction = -1;
+    controller.elevators[1].direction = -1;
+    controller.elevators[2].direction = -1;
     expect(controller.request(3, 4)).toBe(-1);
   });
 });
